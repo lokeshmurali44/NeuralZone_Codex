@@ -1,95 +1,91 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
+import { AnimatePresence, motion, useInView, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import { forwardRef, useEffect, useRef, useState } from "react";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const navItems = [
-  ["Platform", "#platform"],
-  ["Mowack Lite", "#lite"],
-  ["Mowack Pro", "#pro"],
-  ["Control", "#mission-control"],
-  ["Impact", "#impact"]
+const navLinks = [
+  ["Home", "#home"],
+  ["Products", "#products"],
+  ["About Us", "#about"],
+  ["Case Study", "#case-study"],
+  ["Contact Us", "#contact"]
 ];
 
-const liteFrames = [
+const productLinks = [
+  ["Mowack Lite", "#mowack-lite", "Compact autonomy for precise field work."],
+  ["Mowack Pro", "#mowack-pro", "Flagship power for bigger field programs."]
+];
+
+const products = [
   {
-    view: "Front",
-    src: "/products/mowack-lite-front.png",
-    label: "Autonomy stack",
-    copy: "A compact sensing profile for close-range field decisions."
+    id: "mowack-lite",
+    name: "Mowack Lite",
+    eyebrow: "Compact autonomy",
+    statement: "Compact autonomy for precise field work.",
+    description: "Built for close-range control, repeatable row maintenance, and agile movement around crops.",
+    highlights: ["Precision", "Compact Control", "Repeatable Operation"],
+    images: {
+      primary: "/products/mowack-lite-side.png",
+      hover: "/products/mowack-lite-front.png",
+      top: "/products/mowack-lite-top.png"
+    }
   },
   {
-    view: "Side",
-    src: "/products/mowack-lite-side.png",
-    label: "Rugged mobility",
-    copy: "Tracked movement for controlled passes through difficult rows."
-  },
-  {
-    view: "Top",
-    src: "/products/mowack-lite-top.png",
-    label: "Low center of gravity",
-    copy: "Mass sits low and centered for confident slope behavior."
-  },
-  {
-    view: "Rear",
-    src: "/products/mowack-lite-rear.png",
-    label: "Protected engineering",
-    copy: "Critical systems stay contained as the machine works through debris."
+    id: "mowack-pro",
+    name: "Mowack Pro",
+    eyebrow: "Flagship machine",
+    statement: "The flagship machine for bigger field programs.",
+    description: "Designed for power, coverage, durability, and confident field presence across demanding terrain.",
+    highlights: ["Power", "Coverage", "Durability"],
+    images: {
+      primary: "/products/mowack-pro-side.png",
+      hover: "/products/mowack-pro-front.png",
+      top: "/products/mowack-pro-top.png"
+    }
   }
 ];
 
-const heroFrame = {
-  view: "Side",
-  src: "/products/mowack-lite-hero.png",
-  label: "Mowack Lite",
-  copy: "Compact autonomous field robot"
-};
-
-const proFrames = [
-  {
-    view: "Front",
-    src: "/products/mowack-pro-front.png",
-    label: "Flagship presence",
-    copy: "A distinctive enclosed machine built to command larger field programs."
-  },
-  {
-    view: "Side",
-    src: "/products/mowack-pro-side.png",
-    label: "Coverage power",
-    copy: "A stable tracked platform for long, repeatable clearing runs."
-  },
-  {
-    view: "Top",
-    src: "/products/mowack-pro-top.png",
-    label: "Durable architecture",
-    copy: "A protected body designed for rough terrain and sustained operation."
-  },
-  {
-    view: "Rear",
-    src: "/products/mowack-pro-rear.png",
-    label: "Field-ready service",
-    copy: "Clean access thinking without compromising the protected shell."
-  }
+const whyItems = [
+  ["Rugged field mobility", "Tracked platforms built for uneven soil, slopes, brush, and long outdoor duty cycles."],
+  ["Autonomous repeatability", "Repeatable missions help field teams move from reactive work to planned coverage."],
+  ["Reduced manual exposure", "Machines handle repetitive terrain work so crews spend less time in risky conditions."],
+  ["Performance visibility", "Operational insight turns field activity into routes, coverage, runtime, and ROI signals."]
 ];
 
-const terrainItems = [
-  ["Steep slopes", "Stable tracked movement where conventional machines slow down."],
-  ["Dense overgrowth", "Consistent clearing through recurring vegetation loads."],
-  ["Narrow rows", "Controlled movement around crops, trunks, and tight corridors."],
-  ["Labor-heavy maintenance", "Repeatable work that helps crews focus where judgment matters."]
+const missionItems = [
+  ["Mission planning", "Build routes and coverage plans before the machine enters the row."],
+  ["Telemetry", "Monitor slope, speed, battery, runtime, and task status in one calm view."],
+  ["Live oversight", "Track active machines and route progress without a cluttered control room."],
+  ["Remote intervention", "Step in when the field requires human judgment."],
+  ["Performance insights", "Understand coverage, hours saved, and operating efficiency over time."]
 ];
 
 const useCases = [
-  ["Orchards", "Maintain rows with controlled passes and reduced manual exposure."],
-  ["Vineyards", "Navigate tight geometry with precise close-to-crop operation."],
-  ["Farmlands", "Clear recurring vegetation across larger working areas."],
-  ["Fire breaks", "Reduce fuel loads in difficult, time-sensitive terrain."],
-  ["Material handling", "Extend robotic assistance into repeated field movement."]
+  {
+    title: "Orchards",
+    copy: "Maintain tree rows with controlled movement and lower manual exposure.",
+    image: "/products/mowack-lite-side.png"
+  },
+  {
+    title: "Vineyards",
+    copy: "Navigate narrow corridors with compact autonomous passes.",
+    image: "/products/mowack-lite-front.png"
+  },
+  {
+    title: "Farmlands",
+    copy: "Run repeatable vegetation maintenance across larger working areas.",
+    image: "/products/mowack-pro-side.png"
+  },
+  {
+    title: "Fire breaks",
+    copy: "Reduce fuel loads in places where access and timing matter.",
+    image: "/products/mowack-pro-front.png"
+  },
+  {
+    title: "Material handling",
+    copy: "Extend autonomy into repeatable movement support for field operations.",
+    image: "/products/mowack-pro-rear.png"
+  }
 ];
 
 const metrics = [
@@ -99,301 +95,280 @@ const metrics = [
   { value: 3, suffix: "x", label: "faster recurring operations" }
 ];
 
-function clampIndex(progress, length) {
-  return Math.min(length - 1, Math.max(0, Math.floor(progress * length)));
-}
+const preloadedProductImages = [
+  ...new Set([
+    ...products.flatMap((product) => Object.values(product.images)),
+    ...useCases.map((useCase) => useCase.image)
+  ])
+];
+
+const reveal = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.72, ease: [0.16, 1, 0.3, 1] } }
+};
 
 export default function NeuralzomeExperience() {
-  const reducedMotion = useReducedMotion();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [revealProgress, setRevealProgress] = useState(0);
-  const [liteProgress, setLiteProgress] = useState(0);
-  const [proProgress, setProProgress] = useState(0);
+  const [productMenuOpen, setProductMenuOpen] = useState(false);
+  const [activeUseCase, setActiveUseCase] = useState(0);
+  const reducedMotion = useReducedMotion();
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const smoothX = useSpring(pointerX, { stiffness: 90, damping: 24, mass: 0.35 });
+  const smoothY = useSpring(pointerY, { stiffness: 90, damping: 24, mass: 0.35 });
+  const liteX = useTransform(smoothX, [-0.5, 0.5], [-20, 20]);
+  const liteY = useTransform(smoothY, [-0.5, 0.5], [-10, 10]);
+  const proX = useTransform(smoothX, [-0.5, 0.5], [18, -18]);
+  const proY = useTransform(smoothY, [-0.5, 0.5], [8, -8]);
 
-  const revealRef = useRef(null);
-  const revealPinRef = useRef(null);
-  const liteRef = useRef(null);
-  const litePinRef = useRef(null);
-  const proRef = useRef(null);
-  const proPinRef = useRef(null);
-  const terrainRef = useRef(null);
-
-  const revealFrames = useMemo(() => [...liteFrames, ...proFrames], []);
-  const revealFrame = revealFrames[clampIndex(revealProgress, revealFrames.length)];
-  const liteFrame = liteFrames[clampIndex(liteProgress, liteFrames.length)];
-  const proFrame = proFrames[clampIndex(proProgress, proFrames.length)];
+  const activeUse = useCases[activeUseCase];
 
   useEffect(() => {
-    if (reducedMotion) return undefined;
-
-    const lenis = new Lenis({
-      duration: 1.05,
-      smoothWheel: true,
-      wheelMultiplier: 0.82
+    preloadedProductImages.forEach((src) => {
+      const image = new window.Image();
+      image.src = src;
     });
-    const raf = (time) => lenis.raf(time * 1000);
-
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
-
-    return () => {
-      lenis.destroy();
-      gsap.ticker.remove(raf);
-    };
-  }, [reducedMotion]);
-
-  useEffect(() => {
-    const mm = gsap.matchMedia();
-
-    mm.add("(min-width: 900px) and (prefers-reduced-motion: no-preference)", () => {
-      const triggers = [];
-
-      const pinSequence = (section, pin, onUpdate, end = "+=280%") => {
-        if (!section || !pin) return;
-        triggers.push(
-          ScrollTrigger.create({
-            trigger: section,
-            pin,
-            start: "top top",
-            end,
-            scrub: 0.9,
-            anticipatePin: 1,
-            onUpdate: (self) => onUpdate(self.progress)
-          })
-        );
-      };
-
-      pinSequence(revealRef.current, revealPinRef.current, setRevealProgress, "+=360%");
-      pinSequence(liteRef.current, litePinRef.current, setLiteProgress, "+=300%");
-      pinSequence(proRef.current, proPinRef.current, setProProgress, "+=300%");
-
-      gsap.utils.toArray("[data-reveal]").forEach((item) => {
-        gsap.fromTo(
-          item,
-          { autoAlpha: 0, y: 34 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 78%"
-            }
-          }
-        );
-      });
-
-      if (terrainRef.current) {
-        gsap.utils.toArray(".terrain-line").forEach((line, index) => {
-          gsap.fromTo(
-            line,
-            { autoAlpha: 0.52, x: index % 2 ? 18 : -18 },
-            {
-              autoAlpha: 1,
-              x: 0,
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: line,
-                start: "top 72%",
-                end: "bottom 42%",
-                scrub: 0.5
-              }
-            }
-          );
-        });
-      }
-
-      return () => triggers.forEach((trigger) => trigger.kill());
-    });
-
-    return () => mm.revert();
   }, []);
 
+  function handleHeroPointer(event) {
+    if (reducedMotion) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    pointerX.set((event.clientX - bounds.left) / bounds.width - 0.5);
+    pointerY.set((event.clientY - bounds.top) / bounds.height - 0.5);
+  }
+
   return (
-    <main className="nz-site">
-      <Navigation menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+    <main className="nz-home" id="home">
+      <Header
+        menuOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+        productMenuOpen={productMenuOpen}
+        setProductMenuOpen={setProductMenuOpen}
+      />
 
-      <section id="hero" className="nz-hero">
-        <div className="hero-visual" aria-hidden="true">
-          <ProductFrame frame={heroFrame} product="lite" priority />
+      <section className="hero" onPointerMove={handleHeroPointer} onPointerLeave={() => { pointerX.set(0); pointerY.set(0); }}>
+        <div className="hero-copy">
+          <motion.p className="eyebrow" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
+            Neuralzome
+          </motion.p>
+          <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, delay: 0.06 }}>
+            Autonomous machines for real field terrain
+          </motion.h1>
+          <motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, delay: 0.13 }}>
+            Rugged autonomous systems for mowing, clearing, and repeatable agricultural field operations.
+          </motion.p>
+          <motion.div className="hero-actions" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.72, delay: 0.2 }}>
+            <a className="button button-dark" href="#products">Explore Products</a>
+            <a className="button button-light" href="#contact">Book a Demo</a>
+          </motion.div>
         </div>
-        <motion.div
-          className="hero-content"
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <p className="eyebrow">Neuralzome</p>
-          <h1>Autonomy for Demanding Farm Terrain</h1>
-          <p>
-            Autonomous field robots designed to mow, clear, and operate across
-            steep, rugged agricultural environments.
-          </p>
-          <div className="button-row">
-            <a className="button button-dark" href="#final-cta">
-              Book a Demo
-            </a>
-            <a className="button button-light" href="#platform">
-              Explore the Platform
-            </a>
-          </div>
-        </motion.div>
+
+        <div className="hero-stage" aria-label="Mowack Lite and Mowack Pro product preview">
+          <motion.img
+            className="hero-machine hero-machine-lite"
+            src="/products/mowack-lite-side.png"
+            alt="Mowack Lite autonomous field robot"
+            style={{ x: liteX, y: liteY }}
+            loading="eager"
+            decoding="async"
+          />
+          <motion.img
+            className="hero-machine hero-machine-pro"
+            src="/products/mowack-pro-side.png"
+            alt="Mowack Pro autonomous field robot"
+            style={{ x: proX, y: proY }}
+            loading="eager"
+            decoding="async"
+          />
+          <div className="hero-surface" />
+        </div>
       </section>
 
-      <section id="platform" ref={revealRef} className="sequence-section product-reveal">
-        <div ref={revealPinRef} className="sequence-pin">
-          <SectionIntro
-            eyebrow="Product emergence"
-            title="A machine you understand one view at a time."
-            copy="Scroll through the robot as if it were being inspected in a quiet product studio."
-          />
-          <SequenceStage
-            frame={revealFrame}
-            frames={revealFrames}
-            progress={revealProgress}
-            product={revealProgress < 0.5 ? "lite" : "pro"}
-            label={revealProgress < 0.5 ? "Mowack Lite" : "Mowack Pro"}
-          />
-        </div>
-      </section>
-
-      <section id="terrain" ref={terrainRef} className="terrain-section">
-        <div className="terrain-visual" aria-hidden="true">
-          <ProductFrame frame={liteFrames[1]} product="lite" />
-        </div>
-        <div className="terrain-copy" data-reveal>
-          <p className="eyebrow">Terrain challenge</p>
-          <h2>The field sets the standard.</h2>
-          <p>
-            Neuralzome is built for recurring work where terrain, vegetation,
-            and labor availability make conventional maintenance hard to scale.
-          </p>
-        </div>
-        <div className="terrain-lines">
-          {terrainItems.map(([title, copy]) => (
-            <article className="terrain-line" key={title}>
-              <h3>{title}</h3>
-              <p>{copy}</p>
-            </article>
+      <section id="products" className="section product-section">
+        <RevealBlock className="section-heading">
+          <p className="eyebrow">Products</p>
+          <h2>Two machines. One field autonomy platform.</h2>
+          <p>Mowack Lite and Mowack Pro are built for different terrain, coverage, and precision requirements.</p>
+        </RevealBlock>
+        <div className="product-grid">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>
 
-      <section id="lite" ref={liteRef} className="sequence-section chapter chapter-lite">
-        <div ref={litePinRef} className="sequence-pin chapter-pin">
-          <ProductChapter
-            eyebrow="Mowack Lite"
-            title="Compact autonomy for precise field work."
-            copy="Mowack Lite is the compact enclosed machine for close-range precision, maneuverability, and controlled row operation."
-            frame={liteFrame}
-            frames={liteFrames}
-            progress={liteProgress}
-            product="lite"
-            stats={[
-              ["Precision", "close-range mowing"],
-              ["Compact", "row-ready footprint"],
-              ["Controlled", "tracked maneuvering"]
-            ]}
-          />
-        </div>
-      </section>
-
-      <section id="pro" ref={proRef} className="sequence-section chapter chapter-pro">
-        <div ref={proPinRef} className="sequence-pin chapter-pin">
-          <ProductChapter
-            eyebrow="Mowack Pro"
-            title="The flagship machine for bigger field programs."
-            copy="Mowack Pro is the open-frame tracked machine for power, coverage, durability, and all-day field presence."
-            frame={proFrame}
-            frames={proFrames}
-            progress={proProgress}
-            product="pro"
-            stats={[
-              ["Power", "heavy clearing runs"],
-              ["Coverage", "large-area operation"],
-              ["Durability", "protected shell"]
-            ]}
-          />
+      <section className="section why-section">
+        <RevealBlock className="section-heading section-heading-left">
+          <p className="eyebrow">Why Neuralzome</p>
+          <h2>Designed for field work that has to happen again and again.</h2>
+        </RevealBlock>
+        <div className="why-grid">
+          {whyItems.map(([title, copy], index) => (
+            <RevealBlock className="why-item" key={title} delay={index * 0.06}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <h3>{title}</h3>
+              <p>{copy}</p>
+            </RevealBlock>
+          ))}
         </div>
       </section>
 
       <section id="mission-control" className="control-section">
-        <div className="control-copy" data-reveal>
+        <RevealBlock className="control-copy">
           <p className="eyebrow">Mission Control</p>
-          <h2>More than hardware.</h2>
-          <p>
-            Plan routes, supervise machines, intervene remotely, and understand
-            field performance from one refined operations layer.
-          </p>
-        </div>
-        <MissionControl />
+          <h2>Hardware, supervised through a clear operations layer.</h2>
+          <p>Plan, monitor, intervene, and measure field performance without turning autonomy into visual noise.</p>
+        </RevealBlock>
+        <RevealBlock className="dashboard-shell" delay={0.12}>
+          <MissionDashboard />
+        </RevealBlock>
       </section>
 
-      <section id="use-cases" className="use-section">
-        <SectionIntro
-          eyebrow="Use cases"
-          title="Built for work that repeats."
-          copy="Five operating environments. One clear platform story."
-        />
-        <div className="use-list" data-reveal>
-          {useCases.map(([title, copy]) => (
-            <article key={title}>
-              <h3>{title}</h3>
-              <p>{copy}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="impact" className="impact-section">
-        <div className="impact-copy" data-reveal>
-          <p className="eyebrow">Outcomes</p>
-          <h2>Quiet numbers. Real operating value.</h2>
-        </div>
-        <div className="metric-list">
-          {metrics.map((metric) => (
-            <MetricCounter key={metric.label} metric={metric} reducedMotion={reducedMotion} />
-          ))}
-        </div>
-      </section>
-
-      <section id="final-cta" className="final-section">
-        <div className="final-content" data-reveal>
-          <p className="eyebrow">Neuralzome</p>
-          <h2>Modernize field operations with autonomous machines built for real terrain.</h2>
-          <div className="button-row">
-            <a className="button button-dark" href="mailto:info@neuralzome.com">
-              Book a Demo
-            </a>
-            <a className="button button-light" href="mailto:info@neuralzome.com">
-              Talk to the Team
-            </a>
+      <section className="section use-section">
+        <RevealBlock className="section-heading section-heading-left">
+          <p className="eyebrow">Use Cases</p>
+          <h2>Autonomy for the recurring work between the rows.</h2>
+        </RevealBlock>
+        <div className="use-layout">
+          <div className="use-list">
+            {useCases.map((useCase, index) => (
+              <button
+                className={activeUseCase === index ? "use-row active" : "use-row"}
+                type="button"
+                key={useCase.title}
+                onMouseEnter={() => setActiveUseCase(index)}
+                onFocus={() => setActiveUseCase(index)}
+              >
+                <span>{useCase.title}</span>
+                <p>{useCase.copy}</p>
+              </button>
+            ))}
+          </div>
+          <div className="use-preview">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={activeUse.image}
+                src={activeUse.image}
+                alt={`${activeUse.title} use case product preview`}
+                initial={{ opacity: 0, scale: 0.96, y: 16 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.03, y: -12 }}
+                transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                loading="lazy"
+                decoding="async"
+              />
+            </AnimatePresence>
+            <div>
+              <span>{activeUse.title}</span>
+              <p>{activeUse.copy}</p>
+            </div>
           </div>
         </div>
+      </section>
+
+      <section className="section outcomes-section">
+        <RevealBlock className="section-heading">
+          <p className="eyebrow">Outcomes</p>
+          <h2>Confident numbers. Measured field value.</h2>
+        </RevealBlock>
+        <div className="metrics-grid">
+          {metrics.map((metric) => (
+            <MetricCounter key={metric.label} metric={metric} />
+          ))}
+        </div>
+      </section>
+
+      <section id="case-study" className="section case-section">
+        <RevealBlock className="case-card">
+          <div className="case-copy">
+            <p className="eyebrow">Case Study</p>
+            <h2>Clearing difficult terrain with less manual exposure.</h2>
+            <p>
+              A field deployment story focused on repeatable coverage, reduced labor pressure, and safer terrain maintenance.
+            </p>
+            <a className="text-link" href="#case-study">View Case Study</a>
+          </div>
+          <div className="case-image">
+            <img src="/products/mowack-pro-side.png" alt="Mowack Pro case study preview" loading="lazy" decoding="async" />
+          </div>
+        </RevealBlock>
+      </section>
+
+      <section id="about" className="section about-section">
+        <RevealBlock className="about-copy">
+          <p className="eyebrow">About Us</p>
+          <h2>Neuralzome is building practical autonomy for the physical work of agriculture.</h2>
+          <p>
+            We combine rugged robotic hardware, teachable autonomy, and operations software so farms can run recurring terrain work with more consistency and control.
+          </p>
+          <a className="text-link" href="#about">About Us</a>
+        </RevealBlock>
+      </section>
+
+      <section id="contact" className="final-section">
+        <RevealBlock className="final-copy">
+          <p className="eyebrow">Contact Us</p>
+          <h2>Bring autonomous field work into your operating plan.</h2>
+          <div className="hero-actions">
+            <a className="button button-dark" href="mailto:info@neuralzome.com">Book a Demo</a>
+            <a className="button button-light" href="mailto:info@neuralzome.com">Contact Us</a>
+          </div>
+        </RevealBlock>
       </section>
     </main>
   );
 }
 
-function Navigation({ menuOpen, setMenuOpen }) {
+function Header({ menuOpen, setMenuOpen, productMenuOpen, setProductMenuOpen }) {
   return (
-    <header className="site-nav">
-      <a className="brand" href="#hero" aria-label="Neuralzome home">
+    <header className="site-header">
+      <a className="brand" href="#home" aria-label="Neuralzome home">
         <span className="brand-mark" />
         <span>NEURALZOME</span>
       </a>
       <nav className="desktop-nav" aria-label="Primary navigation">
-        {navItems.map(([label, href]) => (
-          <a key={label} href={href}>
-            {label}
-          </a>
-        ))}
+        {navLinks.map(([label, href]) => {
+          if (label === "Products") {
+            return (
+              <div
+                className="nav-product"
+                key={label}
+                onMouseEnter={() => setProductMenuOpen(true)}
+                onMouseLeave={() => setProductMenuOpen(false)}
+              >
+                <a href={href} aria-haspopup="true" aria-expanded={productMenuOpen}>
+                  Products
+                </a>
+                <AnimatePresence>
+                  {productMenuOpen ? (
+                    <motion.div
+                      className="product-menu"
+                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {productLinks.map(([name, link, copy]) => (
+                        <a href={link} key={name}>
+                          <strong>{name}</strong>
+                          <span>{copy}</span>
+                        </a>
+                      ))}
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
+              </div>
+            );
+          }
+
+          return (
+            <a href={href} key={label}>
+              {label}
+            </a>
+          );
+        })}
       </nav>
-      <a className="nav-cta" href="#final-cta">
-        Book Demo
-      </a>
+      <a className="nav-cta" href="#contact">Book a Demo</a>
       <button
         className="menu-toggle"
         type="button"
@@ -404,179 +379,93 @@ function Navigation({ menuOpen, setMenuOpen }) {
         <span />
         <span />
       </button>
-      {menuOpen ? (
-        <nav id="mobile-nav" className="mobile-nav" aria-label="Mobile navigation">
-          {navItems.map(([label, href]) => (
-            <a key={label} href={href} onClick={() => setMenuOpen(false)}>
-              {label}
-            </a>
-          ))}
-          <a href="#final-cta" onClick={() => setMenuOpen(false)}>
-            Book Demo
-          </a>
-        </nav>
-      ) : null}
+      <AnimatePresence>
+        {menuOpen ? (
+          <motion.nav
+            id="mobile-nav"
+            className="mobile-nav"
+            aria-label="Mobile navigation"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
+          >
+            {navLinks.map(([label, href]) => (
+              <a href={href} key={label} onClick={() => setMenuOpen(false)}>
+                {label}
+              </a>
+            ))}
+            {productLinks.map(([label, href]) => (
+              <a href={href} key={label} onClick={() => setMenuOpen(false)}>
+                {label}
+              </a>
+            ))}
+          </motion.nav>
+        ) : null}
+      </AnimatePresence>
     </header>
   );
 }
 
-function SectionIntro({ eyebrow, title, copy }) {
-  return (
-    <div className="section-intro" data-reveal>
-      <p className="eyebrow">{eyebrow}</p>
-      <h2>{title}</h2>
-      {copy ? <p>{copy}</p> : null}
-    </div>
-  );
-}
-
-function SequenceStage({ frame, frames, progress, product, label }) {
-  return (
-    <div className="sequence-stage">
-      <div className="sequence-product">
-        <ProductFrame frame={frame} product={product} priority />
-      </div>
-      <div className="sequence-caption" aria-live="polite">
-        <span>{label}</span>
-        <strong>{frame.view}</strong>
-        <p>{frame.label}</p>
-      </div>
-      <FrameRail frames={frames} progress={progress} />
-      <Callout label={frame.label} copy={frame.copy} product={product} />
-    </div>
-  );
-}
-
-function ProductChapter({ eyebrow, title, copy, frame, frames, progress, product, stats }) {
-  return (
-    <div className="chapter-layout">
-      <div className="chapter-copy">
-        <p className="eyebrow">{eyebrow}</p>
-        <h2>{title}</h2>
-        <p>{copy}</p>
-        <div className="spec-row">
-          {stats.map(([value, label]) => (
-            <article key={label}>
-              <strong>{value}</strong>
-              <span>{label}</span>
-            </article>
-          ))}
-        </div>
-      </div>
-      <div className="chapter-stage">
-        <ProductFrame frame={frame} product={product} priority />
-        <FrameRail frames={frames} progress={progress} compact />
-      </div>
-    </div>
-  );
-}
-
-function ProductFrame({ frame, product, priority = false }) {
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    setFailed(false);
-  }, [frame.src]);
+function ProductCard({ product }) {
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <div className={`product-frame product-${product}`}>
-      {!failed ? (
-        <img
-          src={frame.src}
-          alt={`${product === "lite" ? "Mowack Lite" : "Mowack Pro"} ${frame.view.toLowerCase()} view`}
-          loading={priority ? "eager" : "lazy"}
-          decoding="async"
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        <RobotSilhouette product={product} view={frame.view} />
-      )}
-      <div className="product-shadow" />
-    </div>
-  );
-}
-
-function RobotSilhouette({ product, view }) {
-  const isPro = product === "pro";
-
-  return (
-    <div className={`robot-fallback ${isPro ? "robot-pro" : "robot-lite"}`} aria-hidden="true">
-      <div className="fallback-topline">{view}</div>
-      <div className="fallback-body">
-        <div className="fallback-shell" />
-        <div className="fallback-sensor" />
-        <div className="fallback-track fallback-track-left" />
-        <div className="fallback-track fallback-track-right" />
+    <RevealBlock
+      id={product.id}
+      className="product-card"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div className="product-card-copy">
+        <p className="eyebrow">{product.eyebrow}</p>
+        <h3>{product.name}</h3>
+        <p>{product.statement}</p>
       </div>
-      <span>{isPro ? "Mowack Pro image slot" : "Mowack Lite image slot"}</span>
-    </div>
-  );
-}
-
-function FrameRail({ frames, progress, compact = false }) {
-  const activeIndex = clampIndex(progress, frames.length);
-
-  if (frames.length > 4) {
-    const productIndex = progress < 0.5 ? 0 : 1;
-
-    return (
-      <div className={`frame-rail frame-rail-products ${compact ? "frame-rail-compact" : ""}`}>
-        {["Mowack Lite", "Mowack Pro"].map((label, index) => (
-          <span className={index === productIndex ? "active" : ""} key={label}>
-            {label}
-          </span>
+      <div className="product-image-stage">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={hovered ? product.images.hover : product.images.primary}
+            src={hovered ? product.images.hover : product.images.primary}
+            alt={`${product.name} product preview`}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: hovered ? 1.04 : 1, y: 0 }}
+            exit={{ opacity: 0, scale: 1.02, y: -10 }}
+            transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+            loading="lazy"
+            decoding="async"
+          />
+        </AnimatePresence>
+      </div>
+      <div className="product-highlights">
+        {product.highlights.map((highlight) => (
+          <span key={highlight}>{highlight}</span>
         ))}
       </div>
-    );
-  }
-
-  return (
-    <div className={`frame-rail ${compact ? "frame-rail-compact" : ""}`}>
-      {frames.map((frame, index) => (
-        <span className={index === activeIndex ? "active" : ""} key={`${frame.view}-${index}`}>
-          {frame.view}
-        </span>
-      ))}
-    </div>
+      <a className="text-link" href={`#${product.id}`}>View Product</a>
+    </RevealBlock>
   );
 }
 
-function Callout({ label, copy, product }) {
+function MissionDashboard() {
   return (
-    <aside className={`callout callout-${product}`}>
-      <span>{label}</span>
-      <p>{copy}</p>
-    </aside>
-  );
-}
-
-function MissionControl() {
-  const rows = [
-    ["Mission planning", "12 route segments queued"],
-    ["Telemetry", "Slope, speed, runtime, coverage"],
-    ["Live oversight", "Two machines active"],
-    ["Remote intervention", "Operator link ready"],
-    ["Performance insights", "Coverage cost trending down"]
-  ];
-
-  return (
-    <div className="dashboard" data-reveal>
+    <div className="mission-dashboard">
       <div className="dashboard-map">
-        <div className="field-line field-line-a" />
-        <div className="field-line field-line-b" />
-        <div className="field-line field-line-c" />
-        <span className="machine-dot machine-dot-a" />
-        <span className="machine-dot machine-dot-b" />
+        <span className="map-route map-route-a" />
+        <span className="map-route map-route-b" />
+        <span className="map-route map-route-c" />
+        <span className="map-dot map-dot-a" />
+        <span className="map-dot map-dot-b" />
       </div>
-      <div className="dashboard-panel">
-        <div className="dashboard-header">
+      <div className="dashboard-content">
+        <div className="dashboard-title">
           <span>Mission 04</span>
           <strong>Orchard North</strong>
         </div>
-        {rows.map(([label, value]) => (
-          <div className="dashboard-row" key={label}>
-            <span>{label}</span>
-            <p>{value}</p>
+        {missionItems.map(([title, copy]) => (
+          <div className="dashboard-row" key={title}>
+            <span>{title}</span>
+            <p>{copy}</p>
           </div>
         ))}
       </div>
@@ -584,43 +473,55 @@ function MissionControl() {
   );
 }
 
-function MetricCounter({ metric, reducedMotion }) {
-  const valueRef = useRef(null);
+function MetricCounter({ metric }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const [value, setValue] = useState(0);
 
   useEffect(() => {
-    if (!valueRef.current) return undefined;
+    if (!inView) return undefined;
 
-    if (reducedMotion) {
-      valueRef.current.textContent = `${metric.value}${metric.suffix}`;
-      return undefined;
+    const duration = 1100;
+    const start = performance.now();
+    let frame = 0;
+
+    function tick(now) {
+      const progress = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(metric.value * eased));
+      if (progress < 1) frame = requestAnimationFrame(tick);
     }
 
-    const count = { value: 0 };
-    const trigger = ScrollTrigger.create({
-      trigger: valueRef.current,
-      start: "top 84%",
-      once: true,
-      onEnter: () => {
-        gsap.to(count, {
-          value: metric.value,
-          duration: 1.25,
-          ease: "power3.out",
-          onUpdate: () => {
-            if (valueRef.current) {
-              valueRef.current.textContent = `${Math.round(count.value)}${metric.suffix}`;
-            }
-          }
-        });
-      }
-    });
-
-    return () => trigger.kill();
-  }, [metric, reducedMotion]);
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [inView, metric.value]);
 
   return (
-    <article className="metric" data-reveal>
-      <strong ref={valueRef}>0{metric.suffix}</strong>
+    <RevealBlock className="metric" ref={ref}>
+      <strong>{value}{metric.suffix}</strong>
       <span>{metric.label}</span>
-    </article>
+    </RevealBlock>
   );
 }
+
+const RevealBlock = forwardRef(function RevealBlock(
+  { children, className = "", delay = 0, id, onMouseEnter, onMouseLeave },
+  forwardedRef
+) {
+  return (
+    <motion.div
+      id={id}
+      ref={forwardedRef}
+      className={className}
+      variants={reveal}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.22 }}
+      transition={{ delay }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      {children}
+    </motion.div>
+  );
+});
