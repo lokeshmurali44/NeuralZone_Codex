@@ -43,6 +43,13 @@ const liteFrames = [
   }
 ];
 
+const heroFrame = {
+  view: "Side",
+  src: "/products/mowack-lite-hero.png",
+  label: "Mowack Lite",
+  copy: "Compact autonomous field robot"
+};
+
 const proFrames = [
   {
     view: "Front",
@@ -210,7 +217,7 @@ export default function NeuralzomeExperience() {
 
       <section id="hero" className="nz-hero">
         <div className="hero-visual" aria-hidden="true">
-          <ProductFrame frame={liteFrames[1]} product="lite" priority />
+          <ProductFrame frame={heroFrame} product="lite" priority />
         </div>
         <motion.div
           className="hero-content"

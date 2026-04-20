@@ -188,20 +188,20 @@ button {
   max-width: 900px;
   position: relative;
   text-align: center;
-  transform: translateY(-76px);
+  transform: translateY(-110px);
   z-index: 2;
 }
 
 .hero-visual {
-  height: min(42vh, 420px);
+  height: min(32vh, 340px);
   left: 50%;
-  max-width: 760px;
-  opacity: 0.94;
+  max-width: 980px;
+  opacity: 0.98;
   pointer-events: none;
   position: absolute;
-  top: 92%;
+  top: 82%;
   transform: translate(-50%, -50%);
-  width: min(72vw, 760px);
+  width: min(84vw, 980px);
   z-index: 1;
 }
 
@@ -211,7 +211,7 @@ button {
 }
 
 .hero-visual .product-frame img {
-  transform: scale(1.18) translateY(-7%);
+  transform: none;
   transform-origin: center center;
 }
 
@@ -238,10 +238,10 @@ h2 {
 }
 
 h1 {
-  font-size: clamp(3.35rem, 5.9vw, 6rem);
+  font-size: clamp(3.15rem, 5.2vw, 5.45rem);
   line-height: 0.94;
   margin: 0 auto 24px;
-  max-width: 920px;
+  max-width: 860px;
 }
 
 h2 {
@@ -922,10 +922,10 @@ h3 {
   }
 
   .hero-visual {
-    height: 30vh;
-    opacity: 0.5;
-    top: 94%;
-    width: calc(100vw - 40px);
+    height: 24vh;
+    opacity: 0.62;
+    top: 92%;
+    width: calc(100vw - 32px);
   }
 
   .hero-content {
@@ -933,7 +933,7 @@ h3 {
   }
 
   .hero-visual .product-frame img {
-    transform: scale(1) translateY(0);
+    transform: none;
   }
 
   .sequence-section {
