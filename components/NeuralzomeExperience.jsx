@@ -12,7 +12,7 @@ const navLinks = [
 ];
 
 const productLinks = [
-  ["Mowack Lite", "#mowack-lite", "Compact autonomy for precise field work."],
+  ["Mowack Lite", "/products/mowack-lite", "Compact autonomy for precise field work."],
   ["Mowack Pro", "#mowack-pro", "Flagship power for bigger field programs."]
 ];
 
@@ -20,7 +20,7 @@ const footerGroups = [
   {
     title: "Products",
     links: [
-      ["Mowack Lite", "#mowack-lite"],
+      ["Mowack Lite", "/products/mowack-lite"],
       ["Mowack Pro", "#mowack-pro"],
       ["Mission Control", "#mission-control"]
     ]
@@ -55,7 +55,8 @@ const products = [
       primary: "/products/mowack-lite-side.png",
       hover: "/products/mowack-lite-front.png",
       top: "/products/mowack-lite-top.png"
-    }
+    },
+    href: "/products/mowack-lite"
   },
   {
     id: "mowack-pro",
@@ -68,7 +69,8 @@ const products = [
       primary: "/products/mowack-pro-side.png",
       hover: "/products/mowack-pro-front.png",
       top: "/products/mowack-pro-top.png"
-    }
+    },
+    href: "#mowack-pro"
   }
 ];
 
@@ -376,7 +378,7 @@ function SiteFooter() {
       </div>
 
       <div className="footer-bottom">
-        <span>© 2026 Neuralzome. All rights reserved.</span>
+        <span>&copy; 2026 Neuralzome. All rights reserved.</span>
         <div>
           <a href="#home">Back to top</a>
           <a href="#contact">Book a Demo</a>
@@ -509,7 +511,7 @@ function ProductCard({ product }) {
           <span key={highlight}>{highlight}</span>
         ))}
       </div>
-      <a className="text-link" href={`#${product.id}`}>View Product</a>
+      <a className="text-link" href={product.href}>View Product</a>
     </RevealBlock>
   );
 }
