@@ -16,6 +16,33 @@ const productLinks = [
   ["Mowack Pro", "#mowack-pro", "Flagship power for bigger field programs."]
 ];
 
+const footerGroups = [
+  {
+    title: "Products",
+    links: [
+      ["Mowack Lite", "#mowack-lite"],
+      ["Mowack Pro", "#mowack-pro"],
+      ["Mission Control", "#mission-control"]
+    ]
+  },
+  {
+    title: "Company",
+    links: [
+      ["About Us", "#about"],
+      ["Case Study", "#case-study"],
+      ["Contact Us", "#contact"]
+    ]
+  },
+  {
+    title: "Field Programs",
+    links: [
+      ["Orchards", "#use-cases"],
+      ["Vineyards", "#use-cases"],
+      ["Fire Breaks", "#use-cases"]
+    ]
+  }
+];
+
 const products = [
   {
     id: "mowack-lite",
@@ -224,7 +251,7 @@ export default function NeuralzomeExperience() {
         </RevealBlock>
       </section>
 
-      <section className="section use-section">
+      <section id="use-cases" className="section use-section">
         <RevealBlock className="section-heading section-heading-left">
           <p className="eyebrow">Use Cases</p>
           <h2>Autonomy for the recurring work between the rows.</h2>
@@ -315,7 +342,47 @@ export default function NeuralzomeExperience() {
           </div>
         </RevealBlock>
       </section>
+
+      <SiteFooter />
     </main>
+  );
+}
+
+function SiteFooter() {
+  return (
+    <footer className="site-footer">
+      <div className="footer-main">
+        <div className="footer-brand">
+          <a className="brand footer-logo" href="#home" aria-label="Neuralzome home">
+            <span className="brand-mark" />
+            <span>NEURALZOME</span>
+          </a>
+          <p>
+            Rugged autonomous field machines and operations software for repeatable agricultural terrain work.
+          </p>
+          <a className="footer-contact" href="mailto:info@neuralzome.com">info@neuralzome.com</a>
+        </div>
+
+        <nav className="footer-nav" aria-label="Footer navigation">
+          {footerGroups.map((group) => (
+            <div className="footer-group" key={group.title}>
+              <span>{group.title}</span>
+              {group.links.map(([label, href]) => (
+                <a href={href} key={label}>{label}</a>
+              ))}
+            </div>
+          ))}
+        </nav>
+      </div>
+
+      <div className="footer-bottom">
+        <span>© 2026 Neuralzome. All rights reserved.</span>
+        <div>
+          <a href="#home">Back to top</a>
+          <a href="#contact">Book a Demo</a>
+        </div>
+      </div>
+    </footer>
   );
 }
 
