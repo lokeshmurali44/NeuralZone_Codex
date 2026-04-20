@@ -1304,7 +1304,10 @@ h3 {
 .lite-hotspot span,
 .lite-spec span,
 .lite-spec-detail span,
-.lite-why-item span {
+.lite-why-item span,
+.lite-engineering-callout span,
+.lite-movement-points span,
+.lite-performance-card span {
   color: var(--quiet);
   display: block;
   font-size: 0.74rem;
@@ -1353,11 +1356,108 @@ h3 {
 .lite-advantage p,
 .lite-env-row p,
 .lite-env-preview p,
-.lite-outcome p {
+.lite-outcome p,
+.lite-engineering-callout p,
+.lite-movement-copy > p,
+.lite-movement-points p,
+.lite-performance-card p,
+.lite-angles .section-heading > p,
+.lite-angle-row p {
   color: var(--muted);
   font-size: 0.96rem;
   line-height: 1.62;
   margin: 0;
+}
+
+.lite-engineering-stage {
+  align-items: center;
+  display: grid;
+  gap: 34px;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.48fr);
+}
+
+.lite-engineering-image {
+  align-items: center;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.96), transparent 24rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(236, 231, 222, 0.72));
+  border: 1px solid rgba(16, 18, 17, 0.08);
+  display: grid;
+  justify-items: center;
+  min-height: 600px;
+  overflow: hidden;
+  padding: 40px;
+}
+
+.lite-engineering-image img {
+  filter: drop-shadow(0 34px 30px rgba(16, 18, 17, 0.14));
+  max-height: 500px;
+  object-fit: contain;
+  width: min(100%, 680px);
+}
+
+.lite-engineering-callouts {
+  border-top: 1px solid var(--line);
+  display: grid;
+}
+
+.lite-engineering-callout {
+  border-bottom: 1px solid var(--line);
+  padding: 24px 0;
+  transition: padding-left 220ms var(--ease);
+}
+
+.lite-engineering-callout:hover {
+  padding-left: 18px;
+}
+
+.lite-engineering-callout span,
+.lite-movement-points span,
+.lite-performance-card span {
+  color: var(--green);
+  margin-bottom: 10px;
+}
+
+.lite-movement {
+  align-items: center;
+  display: grid;
+  gap: 56px;
+  grid-template-columns: minmax(320px, 0.56fr) minmax(0, 1fr);
+}
+
+.lite-movement-copy {
+  max-width: 610px;
+}
+
+.lite-movement-points {
+  border-top: 1px solid var(--line);
+  display: grid;
+  margin-top: 36px;
+}
+
+.lite-movement-points article {
+  border-bottom: 1px solid var(--line);
+  padding: 20px 0;
+}
+
+.lite-movement-visual {
+  align-items: center;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.96), transparent 24rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(236, 231, 222, 0.72));
+  border: 1px solid rgba(16, 18, 17, 0.08);
+  display: grid;
+  justify-items: center;
+  min-height: 560px;
+  overflow: hidden;
+  padding: 38px;
+}
+
+.lite-movement-visual img {
+  filter: drop-shadow(0 34px 30px rgba(16, 18, 17, 0.16));
+  max-height: 420px;
+  object-fit: contain;
+  width: min(100%, 740px);
 }
 
 .lite-spec-grid {
@@ -1387,6 +1487,27 @@ h3 {
   gap: 0;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 52px;
+}
+
+.lite-performance-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 34px;
+}
+
+.lite-performance-card {
+  background: rgba(255, 255, 255, 0.48);
+  border: 1px solid rgba(16, 18, 17, 0.08);
+  min-height: 190px;
+  padding: 22px;
+  transition: border-color 220ms var(--ease), box-shadow 220ms var(--ease), transform 220ms var(--ease);
+}
+
+.lite-performance-card:hover {
+  border-color: rgba(16, 18, 17, 0.16);
+  box-shadow: 0 20px 54px rgba(16, 18, 17, 0.1);
+  transform: translateY(-4px);
 }
 
 .lite-spec-detail {
@@ -1543,6 +1664,68 @@ h3 {
   font-size: clamp(1.24rem, 1.7vw, 1.8rem);
 }
 
+.lite-angle-stage {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.48fr);
+}
+
+.lite-angle-preview {
+  align-items: center;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.96), transparent 24rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(236, 231, 222, 0.72));
+  border: 1px solid rgba(16, 18, 17, 0.08);
+  display: grid;
+  justify-items: center;
+  min-height: 610px;
+  overflow: hidden;
+  padding: 40px;
+}
+
+.lite-angle-preview img {
+  filter: drop-shadow(0 36px 32px rgba(16, 18, 17, 0.16));
+  max-height: 500px;
+  object-fit: contain;
+  width: min(100%, 720px);
+}
+
+.lite-angle-list {
+  border-top: 1px solid var(--line);
+  display: grid;
+  align-content: start;
+}
+
+.lite-angle-row {
+  background: transparent;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  display: grid;
+  gap: 8px;
+  padding: 26px 0;
+  text-align: left;
+  transition: padding-left 220ms var(--ease);
+}
+
+.lite-angle-row span {
+  color: rgba(16, 18, 17, 0.62);
+  font-size: clamp(1.35rem, 2.3vw, 2.35rem);
+  font-weight: 760;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  transition: color 220ms var(--ease);
+}
+
+.lite-angle-row.active,
+.lite-angle-row:hover {
+  padding-left: 18px;
+}
+
+.lite-angle-row.active span,
+.lite-angle-row:hover span {
+  color: var(--ink);
+}
+
 .lite-final {
   min-height: 78vh;
 }
@@ -1601,7 +1784,10 @@ h3 {
   .lite-hero,
   .lite-intro,
   .lite-view-grid,
+  .lite-engineering-stage,
+  .lite-movement,
   .lite-env-layout,
+  .lite-angle-stage,
   .lite-platform {
     grid-template-columns: 1fr;
   }
@@ -1647,6 +1833,7 @@ h3 {
   .lite-why-grid,
   .lite-spec-grid,
   .lite-spec-detail-grid,
+  .lite-performance-grid,
   .lite-outcome-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1824,6 +2011,13 @@ h3 {
     padding: 24px;
   }
 
+  .lite-engineering-image,
+  .lite-movement-visual,
+  .lite-angle-preview {
+    min-height: 430px;
+    padding: 24px;
+  }
+
   .lite-view-story {
     min-height: auto;
   }
@@ -1852,6 +2046,7 @@ h3 {
   .lite-why-grid,
   .lite-spec-grid,
   .lite-spec-detail-grid,
+  .lite-performance-grid,
   .lite-advantage-list,
   .lite-outcome-grid {
     grid-template-columns: 1fr;
@@ -1875,6 +2070,10 @@ h3 {
   }
 
   .lite-advantage {
+    min-height: auto;
+  }
+
+  .lite-performance-card {
     min-height: auto;
   }
 
@@ -1961,13 +2160,19 @@ h3 {
 
   .lite-intro-visual,
   .lite-view-media,
-  .lite-env-preview {
+  .lite-env-preview,
+  .lite-engineering-image,
+  .lite-movement-visual,
+  .lite-angle-preview {
     min-height: 340px;
   }
 
   .lite-intro-visual img,
   .lite-view-media img,
-  .lite-env-preview img {
+  .lite-env-preview img,
+  .lite-engineering-image img,
+  .lite-movement-visual img,
+  .lite-angle-preview img {
     max-height: 260px;
   }
 

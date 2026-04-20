@@ -72,10 +72,32 @@ const specDetails = [
 ];
 
 const whyLite = [
-  ["Precision near crops", "Work close to trees and vines with a compact machine built for measured movement."],
-  ["Narrow-row confidence", "Tracked mobility supports repeatable passes in constrained agricultural geometry."],
-  ["Lower damage risk", "Controlled operation helps reduce unnecessary contact around valuable crop rows."],
-  ["Repeatable quality", "Make recurring mowing and weeding less dependent on variable manual passes."]
+  ["Precision", "Work close to trees and vines with a compact machine built for measured movement."],
+  ["Compact Control", "Tracked mobility supports repeatable passes in constrained agricultural geometry."],
+  ["Repeatable Autonomy", "Make recurring mowing and weeding less dependent on variable manual passes."],
+  ["Lower Manual Exposure", "Move people away from repetitive work near tight edges and obstacles."]
+];
+
+const engineeringCallouts = [
+  ["Enclosed form", "A clean body shape protects core systems and keeps visual complexity low."],
+  ["Tight footprint", "Compact geometry supports work near crop rows, posts, and structures."],
+  ["Tracked movement", "Low tracked mobility helps maintain controlled contact with uneven farm surfaces."],
+  ["Field-ready design", "Built around repeatable outdoor maintenance rather than showroom-only robotics."]
+];
+
+const movementPoints = [
+  ["Structured terrain", "Designed for orchards, vineyards, row corridors, and predictable recurring zones."],
+  ["Close-range control", "The side profile keeps the machine visually readable around crop edges and row ends."],
+  ["Measured passes", "Autonomy is framed around consistency: planned movement, supervised operation, and repeatable coverage."]
+];
+
+const performanceHighlights = [
+  ["Control", "Autonomous mission execution with operator visibility."],
+  ["Field suitability", "Best for close-to-crop mowing and structured agricultural spaces."],
+  ["Footprint", "Compact profile for places where larger equipment feels oversized."],
+  ["Efficiency", "Supports recurring maintenance cycles with less manual intervention."],
+  ["Repeatability", "Built for controlled passes across the same zones over time."],
+  ["Architecture", "Autonomy-ready hardware connected to Neuralzome Mission Control."]
 ];
 
 const advantages = [
@@ -127,6 +149,13 @@ const outcomes = [
   ["Less manual exposure", "Move people away from repetitive mowing near tight edges and obstacles."],
   ["Tighter control", "Fit autonomy into places that larger field machines cannot comfortably reach."],
   ["Clearer planning", "Turn recurring field maintenance into visible, trackable operations."]
+];
+
+const productAngles = [
+  ["Side", "The working profile for narrow-row movement.", "/products/mowack-lite-side.png"],
+  ["Front", "Autonomy posture and controlled forward presence.", "/products/mowack-lite-front.png"],
+  ["Top", "Protected architecture and compact footprint.", "/products/mowack-lite-top.png"],
+  ["Rear", "Close-range geometry for structured field passes.", "/products/mowack-lite-rear.png"]
 ];
 
 const footerGroups = [
@@ -204,17 +233,17 @@ export default function MowackLitePage() {
             Mowack Lite
           </motion.p>
           <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.05 }}>
-            Mowack Lite
+            Compact autonomy for precise field work
           </motion.h1>
           <motion.p className="lite-hero-subhead" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}>
-            Compact autonomy for precise field work.
+            Mowack Lite is designed for controlled, repeatable operation across structured agricultural environments.
           </motion.p>
           <motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }}>
             Designed for narrow rows, close-to-crop mowing, and repeatable operation in demanding farm environments.
           </motion.p>
           <motion.div className="hero-actions" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}>
             <a className="button button-dark" href="#contact">Book a Demo</a>
-            <a className="button button-light" href="mailto:info@neuralzome.com">Talk to the Team</a>
+            <a className="button button-light" href="mailto:info@neuralzome.com">Contact Sales</a>
             <a className="text-link lite-hero-link" href="#specifications">View Specifications</a>
           </motion.div>
         </div>
@@ -232,6 +261,8 @@ export default function MowackLitePage() {
         </div>
       </section>
 
+      <LiteViewReveal />
+
       <section className="lite-intro section">
         <RevealBlock className="lite-intro-copy">
           <p className="eyebrow">Positioning</p>
@@ -244,8 +275,6 @@ export default function MowackLitePage() {
           <img src="/products/mowack-lite-top.png" alt="Mowack Lite top view showing compact protected architecture" loading="lazy" decoding="async" />
         </RevealBlock>
       </section>
-
-      <LiteViewReveal />
 
       <section className="section lite-why">
         <RevealBlock className="section-heading section-heading-left">
@@ -263,9 +292,49 @@ export default function MowackLitePage() {
         </div>
       </section>
 
+      <section className="section lite-engineering">
+        <RevealBlock className="section-heading">
+          <p className="eyebrow">Engineering</p>
+          <h2>Purpose-built around compact autonomous work.</h2>
+          <p>Mowack Lite keeps the product language simple: protected form, tracked movement, and a footprint designed for close field geometry.</p>
+        </RevealBlock>
+        <div className="lite-engineering-stage">
+          <RevealBlock className="lite-engineering-image">
+            <img src="/products/mowack-lite-top.png" alt="Mowack Lite top view with enclosed compact architecture" loading="lazy" decoding="async" />
+          </RevealBlock>
+          <div className="lite-engineering-callouts">
+            {engineeringCallouts.map(([title, copy], index) => (
+              <RevealBlock className="lite-engineering-callout" key={title} delay={index * 0.05}>
+                <span>{title}</span>
+                <p>{copy}</p>
+              </RevealBlock>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section lite-movement">
+        <RevealBlock className="lite-movement-copy">
+          <p className="eyebrow">How It Moves</p>
+          <h2>Controlled movement for structured field conditions.</h2>
+          <p>Mowack Lite is suited for environments where the route is known, the available space is limited, and pass quality matters.</p>
+          <div className="lite-movement-points">
+            {movementPoints.map(([title, copy]) => (
+              <article key={title}>
+                <span>{title}</span>
+                <p>{copy}</p>
+              </article>
+            ))}
+          </div>
+        </RevealBlock>
+        <RevealBlock className="lite-movement-visual" delay={0.08}>
+          <img src="/products/mowack-lite-side.png" alt="Mowack Lite side view showing tracked movement profile" loading="lazy" decoding="async" />
+        </RevealBlock>
+      </section>
+
       <section id="specifications" className="section lite-specs">
         <RevealBlock className="section-heading">
-          <p className="eyebrow">Specifications</p>
+          <p className="eyebrow">Performance Highlights</p>
           <h2>Compact machine. Practical field capability.</h2>
           <p>Core product facts are presented clearly, with qualitative context where exact measurements are not defined.</p>
         </RevealBlock>
@@ -274,6 +343,14 @@ export default function MowackLitePage() {
             <RevealBlock className="lite-spec" key={label}>
               <strong>{value}</strong>
               <span>{label}</span>
+            </RevealBlock>
+          ))}
+        </div>
+        <div className="lite-performance-grid">
+          {performanceHighlights.map(([title, copy]) => (
+            <RevealBlock className="lite-performance-card" key={title}>
+              <span>{title}</span>
+              <p>{copy}</p>
             </RevealBlock>
           ))}
         </div>
@@ -370,13 +447,15 @@ export default function MowackLitePage() {
         </div>
       </section>
 
+      <ProductAngles />
+
       <section id="contact" className="final-section lite-final">
         <RevealBlock className="final-copy">
           <p className="eyebrow">Mowack Lite</p>
           <h2>Bring compact autonomy into your field maintenance plan.</h2>
           <div className="hero-actions">
             <a className="button button-dark" href="mailto:info@neuralzome.com">Book a Demo</a>
-            <a className="button button-light" href="mailto:info@neuralzome.com">Contact Us</a>
+            <a className="button button-light" href="mailto:info@neuralzome.com">Talk to the Team</a>
           </div>
         </RevealBlock>
       </section>
@@ -491,6 +570,53 @@ function LiteMissionDashboard() {
         ))}
       </div>
     </div>
+  );
+}
+
+function ProductAngles() {
+  const [activeAngle, setActiveAngle] = useState(0);
+  const active = productAngles[activeAngle];
+
+  return (
+    <section className="section lite-angles">
+      <RevealBlock className="section-heading">
+        <p className="eyebrow">Product Angles</p>
+        <h2>Designed to be read from every working view.</h2>
+        <p>Each angle reveals a different part of the compact-field story: movement, autonomy posture, protection, and close-range geometry.</p>
+      </RevealBlock>
+      <div className="lite-angle-stage">
+        <div className="lite-angle-preview">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={active[2]}
+              src={active[2]}
+              alt={`Mowack Lite ${active[0].toLowerCase()} product angle`}
+              initial={{ opacity: 0, y: 16, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -12, scale: 1.02 }}
+              transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+              loading="lazy"
+              decoding="async"
+            />
+          </AnimatePresence>
+        </div>
+        <div className="lite-angle-list">
+          {productAngles.map(([title, copy], index) => (
+            <button
+              className={activeAngle === index ? "lite-angle-row active" : "lite-angle-row"}
+              type="button"
+              key={title}
+              onMouseEnter={() => setActiveAngle(index)}
+              onFocus={() => setActiveAngle(index)}
+              onClick={() => setActiveAngle(index)}
+            >
+              <span>{title}</span>
+              <p>{copy}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
